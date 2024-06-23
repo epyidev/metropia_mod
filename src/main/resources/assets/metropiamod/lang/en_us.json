@@ -1,0 +1,16 @@
+{
+  "item.metropiamod.cloth": "Vêtement",
+  "item.metropiamod.empty_cloth": "Emplacement de vêtement vide",
+  "itemGroup.metropiaUtilitiesTab": "Metropia Utilities",
+
+  "messages.reloadSkinSuccess": "§2Metropia §8♠ §fTous les skins ont été rechargés avec succès",
+  "messages.reloadClearSuccess": "§2Metropia §8♠ §fVotre skin a bien été réinitialisé",
+  "messages.setModelSuccess": "§2Metropia §8♠ §fLe modèle de §7%s §fa été défini sur §7%s§f",
+  "messages.setSkinSuccess": "§2Metropia §8♠ §fLe skin de §7%s §fa bien été défini sur §7%s§f",
+  "messages.setNBTSuccess": "§2Metropia §8♠ §fLe NBT §7%s §fde cet item a bien été défini sur §7%s",
+  "messages.noItemMainHand": "§2Metropia §8♠ §fVous n'avez pas d'item dans votre main",
+  "messages.blockedSource": "§2Metropia §8♠ §fCette source d'url est bloquée",
+  "messages.noNBTKey": "§2Metropia §8♠ §fCet item n'a pas de §7%s §gdéfini",
+  "messages.NBTKey": "§2Metropia §8♠ §fVoici le §7%s §fde votre item: §7%s",
+  "messages.error": "§2Metropia §8♠ §fUne erreur est survenue lors de l'éxécution de la commande"
+}

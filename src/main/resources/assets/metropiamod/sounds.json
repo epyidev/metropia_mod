@@ -1,0 +1,51 @@
+{
+  "open_bag": {
+    "category": "blocks",
+    "subtitle": "metropiamod.open_bag",
+    "sounds": [
+      "metropiamod:open_bag"
+    ]
+  },
+  "open_bass": {
+    "category": "blocks",
+    "subtitle": "metropiamod.open_bass",
+    "sounds": [
+      "metropiamod:open_bass"
+    ]
+  },
+  "drop": {
+    "category": "blocks",
+    "subtitle": "metropiamod.drop",
+    "sounds": [
+      "metropiamod:drop"
+    ]
+  },
+  "error": {
+    "category": "blocks",
+    "subtitle": "metropiamod.error",
+    "sounds": [
+      "metropiamod:error"
+    ]
+  },
+  "tick": {
+    "category": "blocks",
+    "subtitle": "metropiamod.tick",
+    "sounds": [
+      "metropiamod:tick"
+    ]
+  },
+  "put": {
+    "category": "blocks",
+    "subtitle": "metropiamod.put",
+    "sounds": [
+      "metropiamod:put"
+    ]
+  },
+  "hover": {
+    "category": "blocks",
+    "subtitle": "metropiamod.hover",
+    "sounds": [
+      "metropiamod:hover"
+    ]
+  }
+}
