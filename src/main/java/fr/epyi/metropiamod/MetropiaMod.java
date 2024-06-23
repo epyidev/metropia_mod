@@ -38,32 +38,6 @@ public class MetropiaMod
     public static final String MOD_ID = "metropiamod";
     public static final Logger LOGGER = LogManager.getLogger("MetropiaMod");
 
-    private static final int screenWidth = DistExecutor.runForDist(() -> () -> Minecraft.getInstance().getMainWindow().getScaledWidth(), () -> () -> 0);
-    private static final int screenHeight = DistExecutor.runForDist(() -> () -> Minecraft.getInstance().getMainWindow().getScaledHeight(), () -> () -> 0);
-    public static final String[][] interfaces = {
-        {
-            "inventory",
-            "200",
-            "217",
-            "40",
-            "40"
-        },
-        {
-            "status",
-            "200",
-            "70",
-            "400",
-            "40"
-        },
-        {
-            "cloth",
-            "200",
-            "40",
-            "40",
-            "270"
-        }
-    };
-
     public static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(new ResourceLocation(MOD_ID, "channel"),
             () -> PROTOCOL_VERSION,

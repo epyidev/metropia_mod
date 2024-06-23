@@ -29,11 +29,6 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         super(container, playerInventory, title);
     }
 
-    // USAGES OF DRAGGING AND HOVERED SLOT ID
-    // -1 : Nothing
-    // 0 to 299 : Only for minecraft slots
-    // 300 : Minecraft survival inventory
-    // 999 : Drop area
     public static int draggingSlotId = -1;
     public static boolean isDragging = false;
 
@@ -43,8 +38,6 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
     public static int spittingCount = 1;
 
     public static int hoveredSlotId = -1;
-    public static int InventorySelectionMouseOffsetX = 0;
-    public static int InventorySelectionMouseOffsetY = 0;
     int inventoryTitleMargins = 5;
 
     int loadingStringCounter = 0;
@@ -55,12 +48,30 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        int inventoryPosX = 40;
+        int inventoryPosY = 40;
+        int inventoryWidth = 200;
+        int inventoryHeight = 217;
+        int statusPosX = 400;
+        int statusPosY = 40;
+        int statusWidth = 200;
+        int statusHeight = 70;
+        int clothPosX = 40;
+        int clothPosY = 270;
+        int clothWidth = 200;
+        int clothHeight = 40;
 
-        // Dessinez un fond noir
+        int titleHeight = 17;
+        int titleMargins = 5;
+
+        // Inventory background
+        boolean isMouseInInventory = (mouseX >= inventoryPosX && mouseX < inventoryPosX + inventoryWidth && mouseY >= inventoryPosY && mouseY < inventoryPosY + inventoryHeight);
+        boolean isMouseInStatus = (mouseX >= statusPosX && mouseX < statusPosX + statusWidth && mouseY >= statusPosY && mouseY < statusPosY + statusHeight);
+        boolean isMouseInCloth = (mouseX >= clothPosX && mouseX < clothPosX + clothWidth && mouseY >= clothPosY && mouseY < clothPosY + clothHeight);
         if (
-            !(mouseX >= Integer.parseInt(MetropiaMod.interfaces[0][3]) && mouseX < Integer.parseInt(MetropiaMod.interfaces[0][3]) + Integer.parseInt(MetropiaMod.interfaces[0][1]) && mouseY >= Integer.parseInt(MetropiaMod.interfaces[0][4]) && mouseY < Integer.parseInt(MetropiaMod.interfaces[0][4]) + Integer.parseInt(MetropiaMod.interfaces[0][2]))
-            && !(mouseX >= Integer.parseInt(MetropiaMod.interfaces[1][3]) && mouseX < Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) && mouseY >= Integer.parseInt(MetropiaMod.interfaces[1][4]) && mouseY < Integer.parseInt(MetropiaMod.interfaces[1][4]) + Integer.parseInt(MetropiaMod.interfaces[1][2]))
-            && !(mouseX >= Integer.parseInt(MetropiaMod.interfaces[2][3]) && mouseX < Integer.parseInt(MetropiaMod.interfaces[2][3]) + Integer.parseInt(MetropiaMod.interfaces[2][1]) && mouseY >= Integer.parseInt(MetropiaMod.interfaces[2][4]) && mouseY < Integer.parseInt(MetropiaMod.interfaces[2][4]) + Integer.parseInt(MetropiaMod.interfaces[2][2]))
+            !isMouseInInventory
+            && !isMouseInStatus
+            && !isMouseInCloth
             && isDragging
         ) {
             hoveredSlotId = 999;
@@ -72,102 +83,98 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
 
         // Reset hovered slot id if out of any interface
         if (
-            !(mouseX >= Integer.parseInt(MetropiaMod.interfaces[0][3]) && mouseX < Integer.parseInt(MetropiaMod.interfaces[0][3]) + Integer.parseInt(MetropiaMod.interfaces[0][1]) && mouseY >= Integer.parseInt(MetropiaMod.interfaces[0][4]) && mouseY < Integer.parseInt(MetropiaMod.interfaces[0][4]) + Integer.parseInt(MetropiaMod.interfaces[0][2]))
-            && !(mouseX >= Integer.parseInt(MetropiaMod.interfaces[1][3]) && mouseX < Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) && mouseY >= Integer.parseInt(MetropiaMod.interfaces[1][4]) && mouseY < Integer.parseInt(MetropiaMod.interfaces[1][4]) + Integer.parseInt(MetropiaMod.interfaces[1][2]))
-            && !(mouseX >= Integer.parseInt(MetropiaMod.interfaces[2][3]) && mouseX < Integer.parseInt(MetropiaMod.interfaces[2][3]) + Integer.parseInt(MetropiaMod.interfaces[2][1]) && mouseY >= Integer.parseInt(MetropiaMod.interfaces[2][4]) && mouseY < Integer.parseInt(MetropiaMod.interfaces[2][4]) + Integer.parseInt(MetropiaMod.interfaces[2][2]))
+            !isMouseInInventory
+            && !isMouseInStatus
+            && !isMouseInCloth
         ) {
             hoveredSlotId = 999;
         }
 
-//        MetropiaMod.interfaces[0][3] = String.valueOf(this.width - (180 + 10));
-//        MetropiaMod.interfaces[1][3] = String.valueOf(this.width - (180 + 10));
-//        MetropiaMod.interfaces[2][3] = String.valueOf(this.width - (180 + 10));
-
         // Draw inventory window
-        fill(matrixStack, Integer.parseInt(MetropiaMod.interfaces[0][3]), Integer.parseInt(MetropiaMod.interfaces[0][4]), Integer.parseInt(MetropiaMod.interfaces[0][3]) + Integer.parseInt(MetropiaMod.interfaces[0][1]), Integer.parseInt(MetropiaMod.interfaces[0][4]) + Integer.parseInt(MetropiaMod.interfaces[0][2]), 0x9d000000);
-        fill(matrixStack, Integer.parseInt(MetropiaMod.interfaces[0][3]), Integer.parseInt(MetropiaMod.interfaces[0][4]), Integer.parseInt(MetropiaMod.interfaces[0][3]) + Integer.parseInt(MetropiaMod.interfaces[0][1]), Integer.parseInt(MetropiaMod.interfaces[0][4]) + 17, 0x9d000000);
-        font.drawString(matrixStack, "Votre inventaire", Integer.parseInt(MetropiaMod.interfaces[0][3]) + inventoryTitleMargins, Integer.parseInt(MetropiaMod.interfaces[0][4]) + inventoryTitleMargins, 0x9dFFFFFF);
+        fill(matrixStack, inventoryPosX, inventoryPosY, inventoryPosX + inventoryWidth, inventoryPosY + inventoryHeight, 0x9d000000);
+        fill(matrixStack, inventoryPosX, inventoryPosY, inventoryPosX + inventoryWidth, inventoryPosY + titleHeight, 0x9d000000);
+        font.drawString(matrixStack, "Votre inventaire", inventoryPosX + titleMargins, inventoryPosY + titleMargins, 0x9dFFFFFF);
 
         // Draw status window
-        fill(matrixStack, Integer.parseInt(MetropiaMod.interfaces[1][3]), Integer.parseInt(MetropiaMod.interfaces[1][4]), Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]), Integer.parseInt(MetropiaMod.interfaces[1][4]) + Integer.parseInt(MetropiaMod.interfaces[1][2]), 0x9d000000);
-        fill(matrixStack, Integer.parseInt(MetropiaMod.interfaces[1][3]), Integer.parseInt(MetropiaMod.interfaces[1][4]), Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]), Integer.parseInt(MetropiaMod.interfaces[1][4]) + 17, 0x9d000000);
-        font.drawString(matrixStack, "Informations", Integer.parseInt(MetropiaMod.interfaces[1][3]) + inventoryTitleMargins, Integer.parseInt(MetropiaMod.interfaces[1][4]) + inventoryTitleMargins, 0x9dFFFFFF);
+        fill(matrixStack, statusPosX, statusPosY, statusPosX + statusWidth, statusPosY + statusHeight, 0x9d000000);
+        fill(matrixStack, statusPosX, statusPosY, statusPosX + statusWidth, statusPosY + titleHeight, 0x9d000000);
+        font.drawString(matrixStack, "Informations", statusPosX + titleMargins, statusPosY + titleMargins, 0x9dFFFFFF);
 
         // Draw cloth window
-        fill(matrixStack, Integer.parseInt(MetropiaMod.interfaces[2][3]), Integer.parseInt(MetropiaMod.interfaces[2][4]), Integer.parseInt(MetropiaMod.interfaces[2][3]) + Integer.parseInt(MetropiaMod.interfaces[2][1]), Integer.parseInt(MetropiaMod.interfaces[2][4]) + Integer.parseInt(MetropiaMod.interfaces[2][2]), 0x9d000000);
-        fill(matrixStack, Integer.parseInt(MetropiaMod.interfaces[2][3]), Integer.parseInt(MetropiaMod.interfaces[2][4]), Integer.parseInt(MetropiaMod.interfaces[2][3]) + Integer.parseInt(MetropiaMod.interfaces[2][1]), Integer.parseInt(MetropiaMod.interfaces[2][4]) + 17, 0x9d000000);
-        font.drawString(matrixStack, "Vos vetements", Integer.parseInt(MetropiaMod.interfaces[2][3]) + inventoryTitleMargins, Integer.parseInt(MetropiaMod.interfaces[2][4]) + inventoryTitleMargins, 0x9dFFFFFF);
+        fill(matrixStack, clothPosX, clothPosY, clothPosX + clothWidth, clothPosY + clothHeight, 0x9d000000);
+        fill(matrixStack, clothPosX, clothPosY, clothPosX + clothWidth, clothPosY + titleHeight, 0x9d000000);
+        font.drawString(matrixStack, "Vos vetements", clothPosX + titleMargins, clothPosY + titleMargins, 0x9dFFFFFF);
 
         assert Minecraft.getInstance().player != null;
-        font.drawString(matrixStack, "Vie", Integer.parseInt(MetropiaMod.interfaces[1][3]) + inventoryTitleMargins, Integer.parseInt(MetropiaMod.interfaces[1][4]) + 20, 0x9dFFFFFF);
+        font.drawString(matrixStack, "Vie", statusPosX + titleMargins, statusPosY + 20, 0x9dFFFFFF);
         // HEALTH BG
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 42,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 19,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 3,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 29,
+                statusPosX + 42,
+                statusPosY + 19,
+                statusPosX + statusWidth - 3,
+                statusPosY + 29,
                 0x9d9e3c3c
         );
         // HEALTH CONTENT
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 20,
-                (int) (Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43 + ((Minecraft.getInstance().player.getHealth() * 20 / Minecraft.getInstance().player.getMaxHealth()) * ((Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 4) - (Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43)) / 20)),
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 28,
+                statusPosX + 43,
+                statusPosY + 20,
+                (int) (statusPosX + 43 + ((Minecraft.getInstance().player.getHealth() * 20 / Minecraft.getInstance().player.getMaxHealth()) * ((statusPosX + statusWidth - 4) - (statusPosX + 43)) / 20)),
+                statusPosY + 28,
                 0xffa60000
         );
 
-        font.drawString(matrixStack, "Faim", Integer.parseInt(MetropiaMod.interfaces[1][3]) + inventoryTitleMargins, Integer.parseInt(MetropiaMod.interfaces[1][4]) + 32, 0x9dFFFFFF);
+        font.drawString(matrixStack, "Faim", statusPosX + inventoryTitleMargins, statusPosY + 32, 0x9dFFFFFF);
         // HUNGER BG
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 42,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 31,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 3,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 41,
+                statusPosX + 42,
+                statusPosY + 31,
+                statusPosX + statusWidth - 3,
+                statusPosY + 41,
                 0x9d9e8d42
         );
         // HUNGER CONTENT
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 32,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43 + (Minecraft.getInstance().player.getFoodStats().getFoodLevel() * ((Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 4) - (Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43)) / 20),
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 40,
+                statusPosX + 43,
+                statusPosY + 32,
+                statusPosX + 43 + (Minecraft.getInstance().player.getFoodStats().getFoodLevel() * ((statusPosX + statusWidth - 4) - (statusPosX + 43)) / 20),
+                statusPosY + 40,
                 0xffc7a71c
         );
 
-        font.drawString(matrixStack, "Armure", Integer.parseInt(MetropiaMod.interfaces[1][3]) + inventoryTitleMargins, Integer.parseInt(MetropiaMod.interfaces[1][4]) + 44, 0x9dFFFFFF);
+        font.drawString(matrixStack, "Armure", statusPosX + titleMargins, statusPosY + 44, 0x9dFFFFFF);
         // WATER BG
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 42,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 43,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 3,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 53,
+                statusPosX + 42,
+                statusPosY + 43,
+                statusPosX + statusWidth - 3,
+                statusPosY + 53,
                 0x9d969696
         );
         // WATER CONTENT
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 44,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43 + (Minecraft.getInstance().player.getTotalArmorValue() * ((Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 4) - (Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43)) / 20),
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 52,
+                statusPosX + 43,
+                statusPosY + 44,
+                statusPosX + 43 + (Minecraft.getInstance().player.getTotalArmorValue() * ((statusPosX + statusWidth - 4) - (statusPosX + 43)) / 20),
+                statusPosY + 52,
                 0xff212121
         );
 
-        font.drawString(matrixStack, "Air", Integer.parseInt(MetropiaMod.interfaces[1][3]) + inventoryTitleMargins, Integer.parseInt(MetropiaMod.interfaces[1][4]) + 56, 0x9dFFFFFF);
+        font.drawString(matrixStack, "Air", statusPosX + titleMargins, statusPosY + 56, 0x9dFFFFFF);
         // AIR BG
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 42,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 55,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 3,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 65,
+                statusPosX + 42,
+                statusPosY + 55,
+                statusPosX + statusWidth - 3,
+                statusPosY + 65,
                 0x9d3d84b8
         );
         // AIR CONTENT
         fill(matrixStack,
-                Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43,
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 56,
-                (int) (Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43 + ((Minecraft.getInstance().player.getAir() * 20 / Minecraft.getInstance().player.getMaxAir()) * ((Integer.parseInt(MetropiaMod.interfaces[1][3]) + Integer.parseInt(MetropiaMod.interfaces[1][1]) - 4) - (Integer.parseInt(MetropiaMod.interfaces[1][3]) + 43)) / 20)),
-                Integer.parseInt(MetropiaMod.interfaces[1][4]) + 64,
+                statusPosX + 43,
+                statusPosY + 56,
+                (int) (statusPosX + 43 + ((Minecraft.getInstance().player.getAir() * 20 / Minecraft.getInstance().player.getMaxAir()) * ((statusPosX + statusWidth - 4) - (statusPosX + 43)) / 20)),
+                statusPosY + 64,
                 0xff1b9af7
         );
 
@@ -177,21 +184,10 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         // Draw slots and hovered slots of inventory
         int lineSlotID = 1;
         int columnSlotId = 1;
-        for (int i = 0; i <= 35; i++) {
-            int slotSize = (Integer.parseInt(MetropiaMod.interfaces[0][1]) / 5);
-            int initX = Integer.parseInt(MetropiaMod.interfaces[0][3]);
-            int initY = Integer.parseInt(MetropiaMod.interfaces[0][4]) + 17;
-
-            if (i == 24) {
-                i = 26;
-            }
-
-            if (i > 24) {
-                slotSize = (Integer.parseInt(MetropiaMod.interfaces[2][1]) / 9);
-                initX = Integer.parseInt(MetropiaMod.interfaces[2][3]);
-                initY = Integer.parseInt(MetropiaMod.interfaces[2][4]) + 17;
-                lineSlotID = 1;;
-            }
+        for (int i = 0; i <= 24; i++) {
+            int slotSize = (inventoryWidth / 5);
+            int initX = inventoryPosX;
+            int initY = inventoryPosY + titleHeight;
 
             if (columnSlotId > 1) {
                 initX += ((columnSlotId - 1) * slotSize);
@@ -208,7 +204,6 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
             }
 
             if (i == hoveredSlotId) {
-
                 if (CustomInventoryEvents.isLeftClickHold) {
                     if (!isDragging) {
                         draggingSlotId = i;
@@ -244,7 +239,7 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                 fill(matrixStack, initX + 1, initY + 1, initX + slotSize - 1, initY + slotSize - 1, 0x3F000000);
             }
 
-            if (i > 24 ? (columnSlotId == 9) : (columnSlotId == 5)) {
+            if (columnSlotId == 5) {
                 columnSlotId = 1;
                 lineSlotID++;
             }else {
@@ -255,17 +250,10 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         // Draw items in inventory
         lineSlotID = 1;
         columnSlotId = 1;
-        for (int i = 0; i <= 35; i++) {
-            int slotSize = (Integer.parseInt(MetropiaMod.interfaces[0][1]) / 5);
-            int initX = Integer.parseInt(MetropiaMod.interfaces[0][3]);
-            int initY = Integer.parseInt(MetropiaMod.interfaces[0][4]) + 17;
-
-            if (i > 24) {
-                slotSize = (Integer.parseInt(MetropiaMod.interfaces[0][1]) / 9);
-                initX = Integer.parseInt(MetropiaMod.interfaces[2][3]);
-                initY = Integer.parseInt(MetropiaMod.interfaces[2][4]) + 17;
-                lineSlotID = 1;
-            }
+        for (int i = 0; i <= 24; i++) {
+            int slotSize = (inventoryWidth / 5);
+            int initX = inventoryPosX;
+            int initY = inventoryPosY + titleHeight;
 
             if (columnSlotId > 1) {
                 initX += ((columnSlotId - 1) * slotSize);
@@ -274,31 +262,21 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                 initY += ((lineSlotID - 1) * slotSize);
             }
 
-
             ItemStack itemStack = playerInventory.getStackInSlot(i);
 
             int itemCount = itemStack.getCount();
 
             assert minecraft != null;
-            // Dessinez l'icône de l'objet
             if (draggingSlotId == i) {
                 minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemStack, (mouseX + 2) - ((slotSize - 1) / 2), (mouseY + 2) - ((slotSize - 1) / 2));
-                if (i > 24) {
-                    minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(ModItems.EMPTY_CLOTH.get()), initX + 2, initY + 2);
-                }
             } else {
                 minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemStack, initX + 2, initY + 2);
-                if (i > 24 && itemStack.isEmpty()) {
-                    minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(ModItems.EMPTY_CLOTH.get()), initX + 2, initY + 2);
-                }
             }
 
             // Draw item count
             if (!itemStack.isEmpty()) {
-
                 RenderSystem.pushMatrix();
                 RenderSystem.translatef(0.0F, 0.0F, 400.0F);
-
                 if (draggingSlotId == i) {
                     font.drawStringWithShadow(matrixStack, Integer.toString(itemCount), mouseX + ((float) (slotSize - 1) / 2) - 8, mouseY - ((float) (slotSize - 1) / 2) + 10, 0xFFFFFF);
                 } else {
@@ -311,15 +289,11 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                             font.drawStringWithShadow(matrixStack, Integer.toString(itemCount), initX + slotSize - 8, initY + 10, 0xFFFFFF);
                         }
                     }
-
                 }
-
                 RenderSystem.popMatrix();
-
             }
-
             // Calculate inventory slots
-            if (i > 24 ? (columnSlotId == 9) : (columnSlotId == 5)) {
+            if (columnSlotId == 5) {
                 columnSlotId = 1;
                 lineSlotID++;
             }else {
@@ -329,7 +303,7 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
 
         // Draw splitting item
         if (isSplitting && splittingSlotId != -1) {
-            int slotSize = (Integer.parseInt(MetropiaMod.interfaces[0][1]) / 9);
+            int slotSize = (inventoryWidth / 9);
             ItemStack splittingItem = playerInventory.getStackInSlot(splittingSlotId);
             minecraft.getItemRenderer().renderItemAndEffectIntoGUI(splittingItem, (mouseX + 2) - ((slotSize - 1) / 2), (mouseY + 2) - ((slotSize - 1) / 2));
             RenderSystem.pushMatrix();
@@ -350,14 +324,11 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                     int dirtiness = ClothItem.getClothDirtiness(hoveredItem);
 
                     if (!imageUrl.isEmpty()) {
-
                         Thread downloadThread = new Thread(() -> {
                             isDownloading = true;
                             BufferedImage downloadedImage = ImageDownloader.downloadImage(imageUrl);
-
                             if (downloadedImage != null) {
                                 NativeImage nativeImage = new NativeImage(downloadedImage.getWidth(), downloadedImage.getHeight(), true);
-
                                 for (int y = 0; y < downloadedImage.getHeight(); y++) {
                                     for (int x = 0; x < downloadedImage.getWidth(); x++) {
                                         int rgb = downloadedImage.getRGB(x, y);
@@ -365,34 +336,21 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                                         int red = (rgb >> 16) & 0xFF;
                                         int green = (rgb >> 8) & 0xFF;
                                         int blue = (rgb) & 0xFF;
-
                                         int abgrColor = (alpha << 24) | (blue << 16) | (green << 8) | red;
-
                                         nativeImage.setPixelRGBA(x, y, abgrColor);
                                     }
                                 }
-
                                 dynamicTexture = new DynamicTexture(nativeImage);
                                 Minecraft.getInstance().getTextureManager().loadTexture(new ResourceLocation(MetropiaMod.MOD_ID, "skins/" + imageUrl.hashCode()), dynamicTexture);
-
-
                                 isDownloading = false;
                             }
                         });
-
-
                         ResourceLocation resourceLocation = new ResourceLocation(MetropiaMod.MOD_ID, "skins/" + imageUrl.hashCode());
-
                         if (Minecraft.getInstance().getTextureManager().getTexture(resourceLocation) == null && !downloadThread.isAlive() && !isDownloading) {
                             isDownloading = true;
                             downloadThread.start();
                         }
-
-                        int borderThickness = 2;
-                        int borderColor = 0xFFFFFF;
-
                         fill(matrixStack, mouseX, mouseY - 80, mouseX + 60, mouseY - 80 + 60, 0x9d000000);
-
                         if (!isDownloading) {
                             try {
                                 Minecraft.getInstance().getTextureManager().bindTexture(resourceLocation);
@@ -409,13 +367,8 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                                     loadingString = loadingString + ".";
                                 }
                             }
-
                             font.drawString(matrixStack, loadingString, mouseX + 28 + ((float) 4 / loadingString.length() ), mouseY - 55, 0xFFFFFF);
                         }
-
-
-
-
                     }
                 }
             }
@@ -429,7 +382,5 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
 
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
-
     }
-
 }
