@@ -13,14 +13,10 @@ import net.minecraft.util.text.TranslationTextComponent
 
 object ClearSkinCacheCommand {
     fun register(dispatcher: CommandDispatcher<CommandSource?>) {
-        // Thing to note, arguments are handled in alphabetical order.
-
-        val clear = Commands.literal("reloadskin").executes { obj: CommandContext<CommandSource?>? -> run(obj) }
-
-        dispatcher.register(clear)
+        dispatcher.register(Commands.literal("reloadskin").executes(this::execute))
     }
 
-    private fun run(ctx: CommandContext<CommandSource?>?): Int {
+    private fun execute(ctx: CommandContext<CommandSource?>?): Int {
         try {
             PacketHandler.sendToPlayer(ClientClearSkinCache, ctx!!.source!!.asPlayer())
             CustomSkinManager.sendAllToPlayer(ctx.source!!.asPlayer(), false)

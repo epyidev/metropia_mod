@@ -6,6 +6,7 @@ import fr.epyi.metropiamod.capabilities.CapabilityHandler
 import fr.epyi.metropiamod.client.ClientSkinManager
 import fr.epyi.metropiamod.commands.CustomCommand
 import fr.epyi.metropiamod.config.SkinConfig
+import fr.epyi.metropiamod.events.CustomCommandsEvents
 import fr.epyi.metropiamod.events.CustomInventoryEvents
 import fr.epyi.metropiamod.events.ModSoundEvents
 import fr.epyi.metropiamod.item.ModItems
@@ -36,7 +37,7 @@ import java.util.function.Supplier
 class MetropiaMod {
     init {
         val loadingContext = ModLoadingContext.get()
-        loadingContext.registerConfig(ModConfig.Type.COMMON, SkinConfig.SERVER_CONFIG, "re-skin.toml")
+        loadingContext.registerConfig(ModConfig.Type.COMMON, SkinConfig.SERVER_CONFIG, "metropiamod.toml")
 
         val eventBus = FMLJavaModLoadingContext.get().modEventBus
 
@@ -79,6 +80,7 @@ class MetropiaMod {
         PacketHandler.init()
         CapabilityHandler.register()
         CustomCommand.registerNewArgTypes()
+        MinecraftForge.EVENT_BUS.register(CustomCommandsEvents)
 
         var index = 0
         NETWORK.registerMessage(index,

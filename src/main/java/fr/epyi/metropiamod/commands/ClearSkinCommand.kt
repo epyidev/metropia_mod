@@ -15,35 +15,22 @@ import java.util.function.Consumer
 
 object ClearSkinCommand {
     fun register(dispatcher: CommandDispatcher<CommandSource?>) {
-        // Thing to note, arguments are handled in alphabetical order.
-
-        val setSkin = Commands.literal("clearskin")
+        dispatcher.register(Commands.literal("clearskin")
             .requires { sender: CommandSource ->
-                (!SkinConfig.SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(
-                    2
-                ))
-            }
-            .executes { ctx: CommandContext<CommandSource> ->
+                (!SkinConfig.SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(2))
+            }.executes { ctx: CommandContext<CommandSource> ->
                 val entity = ctx.source.asPlayer()
-                execute(
-                    ctx.source,
-                    listOf<ServerPlayerEntity>(entity)
-                )
-            }
-            .requires { sender: CommandSource ->
-                (!SkinConfig.OTHERS_SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(
-                    2
-                ))
-            }
-            .then(
-                Commands.argument<EntitySelector>("targets", EntityArgument.players())
-                    .executes { ctx: CommandContext<CommandSource> ->
-                        val targetPlayers =
-                            EntityArgument.getPlayers(ctx, "targets")
-                        execute(ctx.source, targetPlayers)
-                    })
-
-        dispatcher.register(setSkin)
+                execute(ctx.source, listOf<ServerPlayerEntity>(entity))
+            }.requires { sender: CommandSource ->
+                (!SkinConfig.OTHERS_SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(2))
+            }.then(
+                Commands.argument<EntitySelector>("targets", EntityArgument.players()
+            ).executes { ctx: CommandContext<CommandSource> ->
+                val targetPlayers =
+                EntityArgument.getPlayers(ctx, "targets")
+                execute(ctx.source, targetPlayers)
+            })
+        )
     }
 
     private fun execute(source: CommandSource, targets: Collection<ServerPlayerEntity>): Int {
@@ -54,7 +41,7 @@ object ClearSkinCommand {
             source.sendFeedback(TranslationTextComponent("messages.reloadClearSuccess", target.displayName), false)
             CustomSkinManager.resetSkin(target)
         })
-        if (targets.size == 0) {
+        if (targets.isEmpty()) {
             return -1
         }
         return Command.SINGLE_SUCCESS

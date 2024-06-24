@@ -18,54 +18,33 @@ import net.minecraft.util.text.TranslationTextComponent
 import java.util.function.Consumer
 
 object SetModelCommand {
-    private val MODEL_SUGGESTIONS =
-        SuggestionProvider { ctx: CommandContext<CommandSource?>?, builder: SuggestionsBuilder? ->
-            ISuggestionProvider.suggest(
-                arrayOf("default", "slim"),
-                builder
-            )
-        }
-
     private const val MODEL_ARG = "modelType"
+    private val MODEL_SUGGESTIONS = SuggestionProvider { ctx: CommandContext<CommandSource?>?, builder: SuggestionsBuilder? ->
+        ISuggestionProvider.suggest(arrayOf("default", "slim"), builder!!)
+    }
 
     fun register(dispatcher: CommandDispatcher<CommandSource?>) {
-        // Thing to note, arguments are handled in alphabetical order.
-
-        val setModel = Commands.literal("setmodel")
+        dispatcher.register(Commands.literal("setmodel")
             .requires { sender: CommandSource ->
-                (!SkinConfig.SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(
-                    2
-                ))
-            }
-            .then(Commands.argument<String>(MODEL_ARG, StringArgumentType.word())
-                .suggests(MODEL_SUGGESTIONS)
-                .executes { ctx: CommandContext<CommandSource> ->
-                    val entity = ctx.source.asPlayer()
-                    val modelType =
-                        StringArgumentType.getString(ctx, MODEL_ARG)
-                    execute(
-                        ctx.source,
-                        listOf<ServerPlayerEntity>(entity),
-                        modelType
-                    )
-                }
-                .requires { sender: CommandSource ->
-                    (!SkinConfig.OTHERS_SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(
-                        2
-                    ))
-                }
-                .then(
-                    Commands.argument<EntitySelector>("targets", EntityArgument.players())
-                        .executes { ctx: CommandContext<CommandSource> ->
-                            val targetPlayers =
-                                EntityArgument.getPlayers(ctx, "targets")
-                            val modelType =
-                                StringArgumentType.getString(ctx, MODEL_ARG)
-                            execute(ctx.source, targetPlayers, modelType)
-                        })
-            )
-
-        dispatcher.register(setModel)
+                (!SkinConfig.SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(2))
+            }.then(
+                Commands.argument<String>(MODEL_ARG, StringArgumentType.word()
+            ).suggests(
+                MODEL_SUGGESTIONS
+            ).executes { ctx: CommandContext<CommandSource> ->
+                val entity = ctx.source.asPlayer()
+                val modelType = StringArgumentType.getString(ctx, MODEL_ARG)
+                execute(ctx.source, listOf<ServerPlayerEntity>(entity), modelType)
+            }.requires { sender: CommandSource ->
+                (!SkinConfig.OTHERS_SELF_SKIN_NEEDS_OP.get() || sender.hasPermissionLevel(2))
+            }.then(
+                Commands.argument<EntitySelector>("targets", EntityArgument.players()
+            ).executes { ctx: CommandContext<CommandSource> ->
+                val targetPlayers = EntityArgument.getPlayers(ctx, "targets")
+                val modelType = StringArgumentType.getString(ctx, MODEL_ARG)
+                execute(ctx.source, targetPlayers, modelType)
+            })
+        ))
     }
 
     private fun execute(source: CommandSource, targets: Collection<ServerPlayerEntity>, modelType: String): Int {
@@ -73,16 +52,10 @@ object SetModelCommand {
             if (target == null) {
                 return@forEach
             }
-            source.sendFeedback(
-                TranslationTextComponent(
-                    "messages.setModelSuccess",
-                    target.displayName,
-                    modelType
-                ), false
-            )
             CustomSkinManager.setModel(target, modelType)
+            source.sendFeedback(TranslationTextComponent("messages.setModelSuccess", target.displayName, modelType), false)
         })
-        if (targets.size == 0) {
+        if (targets.isEmpty()) {
             return -1
         }
         return Command.SINGLE_SUCCESS

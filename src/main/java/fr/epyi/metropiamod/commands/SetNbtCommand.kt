@@ -8,43 +8,29 @@ import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands
 import net.minecraft.util.text.TranslationTextComponent
 
-class SetNbtCommand(dispatcher: CommandDispatcher<CommandSource?>) {
-    init {
-        dispatcher.register(
-            Commands.literal("setnbt").requires { source: CommandSource ->
-                source.hasPermissionLevel(
-                    2
-                )
-            }.then(
-                Commands.argument("nbt", StringArgumentType.string()).then(
-                    Commands.argument("value", StringArgumentType.string())
-                        .executes { context: CommandContext<CommandSource> ->
-                            this.setNbt(
-                                context
-                            )
-                        }
-                )
-            ))
+object SetNbtCommand {
+    fun register(dispatcher: CommandDispatcher<CommandSource>?) {
+        dispatcher!!.register(Commands.literal("setnbt").requires { source: CommandSource ->source.hasPermissionLevel(2)}.then(
+            Commands.argument("nbt", StringArgumentType.string()).then(
+                Commands.argument("value", StringArgumentType.string()).executes(this::execute)
+            )
+        ))
     }
 
-    @Throws(CommandSyntaxException::class)
-    private fun setNbt(context: CommandContext<CommandSource>): Int {
+    private fun execute(context: CommandContext<CommandSource>): Int {
         val nbtKey = StringArgumentType.getString(context, "nbt")
         val nbtValue = StringArgumentType.getString(context, "value")
         val source = context.source
         val player = source.asPlayer()
-
         val heldItem = player.heldItemMainhand
-
-        if (!heldItem.isEmpty) {
-            val nbt = heldItem.getOrCreateTag()
-            nbt.putString(nbtKey, nbtValue)
-            heldItem.tag = nbt
-            source.sendFeedback(TranslationTextComponent("messages.setNBTSuccess", nbtKey, nbtValue), true)
-            return 1
-        } else {
+        if (heldItem.isEmpty) {
             source.sendFeedback(TranslationTextComponent("messages.noItemMainHand"), true)
             return -1
         }
+        val nbt = heldItem.getOrCreateTag()
+        nbt.putString(nbtKey, nbtValue)
+        heldItem.tag = nbt
+        source.sendFeedback(TranslationTextComponent("messages.setNBTSuccess", nbtKey, nbtValue), true)
+        return 1
     }
 }
