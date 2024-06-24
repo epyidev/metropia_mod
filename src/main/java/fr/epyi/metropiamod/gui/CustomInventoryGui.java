@@ -18,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static net.minecraft.client.Minecraft.getInstance;
 import static net.minecraft.client.gui.screen.inventory.InventoryScreen.drawEntityOnScreen;
