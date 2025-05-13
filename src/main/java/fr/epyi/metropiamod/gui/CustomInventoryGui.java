@@ -50,13 +50,13 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         int inventoryPosX = 40;
         int inventoryPosY = 40;
         int inventoryWidth = 200;
-        int inventoryHeight = 217;
+        int inventoryHeight = 83;
         int statusPosX = 400;
         int statusPosY = 40;
         int statusWidth = 200;
         int statusHeight = 70;
         int clothPosX = 40;
-        int clothPosY = 270;
+        int clothPosY = 123;
         int clothWidth = 200;
         int clothHeight = 40;
 
@@ -90,8 +90,8 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         }
 
         // Draw inventory window
-        fill(matrixStack, inventoryPosX, inventoryPosY, inventoryPosX + inventoryWidth, inventoryPosY + inventoryHeight, 0x9d000000);
-        fill(matrixStack, inventoryPosX, inventoryPosY, inventoryPosX + inventoryWidth, inventoryPosY + titleHeight, 0x9d000000);
+        fill(matrixStack, inventoryPosX, inventoryPosY, inventoryPosX + inventoryWidth - 2, inventoryPosY + inventoryHeight, 0x9d000000);
+        fill(matrixStack, inventoryPosX, inventoryPosY, inventoryPosX + inventoryWidth - 2, inventoryPosY + titleHeight, 0x9d000000);
         font.drawString(matrixStack, "Votre inventaire", inventoryPosX + titleMargins, inventoryPosY + titleMargins, 0x9dFFFFFF);
 
         // Draw status window
@@ -100,8 +100,8 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         font.drawString(matrixStack, "Informations", statusPosX + titleMargins, statusPosY + titleMargins, 0x9dFFFFFF);
 
         // Draw cloth window
-        fill(matrixStack, clothPosX, clothPosY, clothPosX + clothWidth, clothPosY + clothHeight, 0x9d000000);
-        fill(matrixStack, clothPosX, clothPosY, clothPosX + clothWidth, clothPosY + titleHeight, 0x9d000000);
+        fill(matrixStack, clothPosX, clothPosY, clothPosX + clothWidth - 2, clothPosY + clothHeight, 0x9d000000);
+        fill(matrixStack, clothPosX, clothPosY, clothPosX + clothWidth - 2, clothPosY + titleHeight, 0x9d000000);
         font.drawString(matrixStack, "Vos vetements", clothPosX + titleMargins, clothPosY + titleMargins, 0x9dFFFFFF);
 
         assert Minecraft.getInstance().player != null;
@@ -183,10 +183,16 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         // Draw slots and hovered slots of inventory
         int lineSlotID = 1;
         int columnSlotId = 1;
-        for (int i = 0; i <= 24; i++) {
-            int slotSize = (inventoryWidth / 5);
+        for (int i = 0; i <= 35; i++) {
+            int slotSize = (inventoryWidth / 9);
             int initX = inventoryPosX;
             int initY = inventoryPosY + titleHeight;
+
+            if (i > 26) {
+                initX = clothPosX;
+                initY = clothPosY + titleHeight;
+                lineSlotID = 1;
+            }
 
             if (columnSlotId > 1) {
                 initX += ((columnSlotId - 1) * slotSize);
@@ -238,7 +244,7 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                 fill(matrixStack, initX + 1, initY + 1, initX + slotSize - 1, initY + slotSize - 1, 0x3F000000);
             }
 
-            if (columnSlotId == 5) {
+            if (columnSlotId == 9) {
                 columnSlotId = 1;
                 lineSlotID++;
             }else {
@@ -249,10 +255,16 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
         // Draw items in inventory
         lineSlotID = 1;
         columnSlotId = 1;
-        for (int i = 0; i <= 24; i++) {
-            int slotSize = (inventoryWidth / 5);
+        for (int i = 0; i <= 35; i++) {
+            int slotSize = (inventoryWidth / 9);
             int initX = inventoryPosX;
             int initY = inventoryPosY + titleHeight;
+
+            if (i > 26) {
+                initX = clothPosX;
+                initY = clothPosY + titleHeight;
+                lineSlotID = 1;
+            }
 
             if (columnSlotId > 1) {
                 initX += ((columnSlotId - 1) * slotSize);
@@ -268,12 +280,18 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
             assert minecraft != null;
             if (draggingSlotId == i) {
                 minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemStack, (mouseX + 2) - ((slotSize - 1) / 2), (mouseY + 2) - ((slotSize - 1) / 2));
+                if  (i > 26) {
+                    minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(ModItems.EMPTY_CLOTH.get()), initX + 2, initY + 2);
+                }
             } else {
                 minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemStack, initX + 2, initY + 2);
+                if  (i > 26) {
+                    minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(ModItems.EMPTY_CLOTH.get()), initX + 2, initY + 2);
+                }
             }
 
             // Draw item count
-            if (!itemStack.isEmpty()) {
+            if (!itemStack.isEmpty() && itemCount > 1) {
                 RenderSystem.pushMatrix();
                 RenderSystem.translatef(0.0F, 0.0F, 400.0F);
                 if (draggingSlotId == i) {
@@ -292,7 +310,7 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                 RenderSystem.popMatrix();
             }
             // Calculate inventory slots
-            if (columnSlotId == 5) {
+            if (columnSlotId == 9) {
                 columnSlotId = 1;
                 lineSlotID++;
             }else {
