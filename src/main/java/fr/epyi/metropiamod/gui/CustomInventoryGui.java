@@ -47,16 +47,16 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        int inventoryPosX = 40;
-        int inventoryPosY = 40;
+        int inventoryPosX = this.width - 240;
+        int inventoryPosY = 115;
         int inventoryWidth = 200;
         int inventoryHeight = 83;
-        int statusPosX = 400;
+        int statusPosX = this.width - 240;
         int statusPosY = 40;
         int statusWidth = 200;
         int statusHeight = 70;
-        int clothPosX = 40;
-        int clothPosY = 123;
+        int clothPosX = this.width - 240;;
+        int clothPosY = 198;
         int clothWidth = 200;
         int clothHeight = 40;
 

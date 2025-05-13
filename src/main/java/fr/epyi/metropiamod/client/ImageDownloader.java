@@ -9,10 +9,18 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class ImageDownloader {
 
     public static BufferedImage downloadImage(String imageUrl) {
+
+        if (!isValidUrl(imageUrl)) {
+            System.err.println("URL invalide : " + imageUrl);
+            return null;
+        }
+
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(imageUrl);
 
@@ -37,5 +45,14 @@ public class ImageDownloader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static boolean isValidUrl(String url) {
+        try {
+            URL parsedUrl = new URL(url);
+            return parsedUrl.getProtocol().startsWith("http");
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 }

@@ -6,6 +6,7 @@ import fr.epyi.metropiamod.commands.CustomCommand;
 import fr.epyi.metropiamod.config.SkinConfig;
 import fr.epyi.metropiamod.events.CustomInventoryEvents;
 import fr.epyi.metropiamod.events.ModSoundEvents;
+import fr.epyi.metropiamod.events.PlayerArmorHandler;
 import fr.epyi.metropiamod.item.ModItems;
 import fr.epyi.metropiamod.network.*;
 import net.minecraft.client.Minecraft;
@@ -60,6 +61,8 @@ public class MetropiaMod
         eventBus.addListener(this::processIMC);
         eventBus.addListener(this::doClientStuff);
         MinecraftForge.EVENT_BUS.register(this);
+
+        new PlayerArmorHandler();
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
@@ -69,6 +72,9 @@ public class MetropiaMod
     private void setup(final FMLCommonSetupEvent event) {
         PacketHandler.init();
         CapabilityHandler.register();
+
+
+
         CustomCommand.registerNewArgTypes();
 
         int index = 0;

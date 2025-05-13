@@ -37,14 +37,14 @@ public class ClothItem extends Item {
 
     public static void setClothArmor(ItemStack stack, int armor) {
         CompoundNBT compound = stack.getOrCreateTag();
-        compound.putInt("clothArmor", armor);
+        compound.putString("clothArmor", String.valueOf(armor));
     }
 
-    public static int getClothArmor(ItemStack stack) {
+    public static String getClothArmor(ItemStack stack) {
         CompoundNBT compound = stack.getTag();
         if (compound != null && compound.contains("clothArmor")) {
-            return compound.getInt("clothArmor");
+            return compound.getString("clothArmor");
         }
-        return 0;
+        return "0";
     }
 }
