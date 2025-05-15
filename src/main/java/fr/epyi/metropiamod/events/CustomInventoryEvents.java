@@ -1,6 +1,7 @@
 package fr.epyi.metropiamod.events;
 
 import fr.epyi.metropiamod.MetropiaMod;
+import fr.epyi.metropiamod.gui.CharacterCreatorGui;
 import fr.epyi.metropiamod.gui.CustomInventoryContainer;
 import fr.epyi.metropiamod.gui.CustomInventoryGui;
 import fr.epyi.metropiamod.item.ModItems;
@@ -98,6 +99,10 @@ public class CustomInventoryEvents {
                 }
             }
         }
+
+        if (event.getGui() instanceof CharacterCreatorGui) {
+            CharacterCreatorGui.clicked = true; // Set clicked to true
+        }
     }
 
     @SubscribeEvent
@@ -124,6 +129,15 @@ public class CustomInventoryEvents {
                         getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 0.8F);
                     }
                 }
+            }
+        }
+
+        if (event.getGui() instanceof CharacterCreatorGui) {
+            if (event.getGui() instanceof CharacterCreatorGui) {
+                CharacterCreatorGui.scrollSpeed = 10; // Set initial scroll speed
+                CharacterCreatorGui.scrollDelta = event.getScrollDelta();
+
+                event.setCanceled(true); // Prevent default scrolling behavior
             }
         }
     }

@@ -2,6 +2,7 @@ package fr.epyi.metropiamod.network;
 
 import fr.epyi.metropiamod.CustomSkinManager;
 import fr.epyi.metropiamod.MetropiaMod;
+import fr.epyi.metropiamod.config.SkinConfig;
 import fr.epyi.metropiamod.item.ClothItem;
 import fr.epyi.metropiamod.item.ModItems;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -47,7 +48,7 @@ public class ClothChange {
                 }
             }
 
-            layerList.add("https://i.imgur.com/6BBXz5m.png");
+            layerList.add(SkinConfig.SKIN_VOID_SKIN_URL.get());
 
 
             if (layerList.get(0) != null && !layerList.get(0).isEmpty()) {

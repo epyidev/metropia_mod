@@ -150,11 +150,15 @@ public class CustomInventoryGui extends ContainerScreen<CustomInventoryContainer
                 statusPosY + 53,
                 0x9d969696
         );
+        Integer armorValue = Minecraft.getInstance().player.getTotalArmorValue();
+        if (armorValue > 100) {
+            armorValue = 100;
+        }
         // WATER CONTENT
         fill(matrixStack,
                 statusPosX + 43,
                 statusPosY + 44,
-                statusPosX + 43 + (Minecraft.getInstance().player.getTotalArmorValue() * ((statusPosX + statusWidth - 4) - (statusPosX + 43)) / 20),
+                statusPosX + 43 + (armorValue * ((statusPosX + statusWidth - 4) - (statusPosX + 43)) / 100),
                 statusPosY + 52,
                 0xff212121
         );

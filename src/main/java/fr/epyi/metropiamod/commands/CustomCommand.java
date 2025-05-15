@@ -11,6 +11,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.ArgumentSerializer;
 import net.minecraft.command.arguments.ArgumentTypes;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.StringTextComponent;
@@ -38,6 +39,9 @@ public class CustomCommand {
                         .executes(CustomCommand::getNBT)
                 )
         );
+
+        LoadClothesCommand loadClothesCommand = new LoadClothesCommand(dispatcher);
+        OpenCharacterCreatorCommand openCharacterCreatorCommand = new OpenCharacterCreatorCommand(dispatcher);
 
         SetSkinCommand.register(dispatcher);
         SetModelCommand.register(dispatcher);

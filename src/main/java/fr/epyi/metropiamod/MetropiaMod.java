@@ -48,7 +48,7 @@ public class MetropiaMod
 
     public MetropiaMod() {
         ModLoadingContext loadingContext = ModLoadingContext.get();
-        loadingContext.registerConfig(ModConfig.Type.COMMON, SkinConfig.SERVER_CONFIG, "re-skin.toml");
+        loadingContext.registerConfig(ModConfig.Type.COMMON, SkinConfig.SERVER_CONFIG, "metropiamod.toml");
 
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -91,6 +91,9 @@ public class MetropiaMod
 
         index++;
         NETWORK.registerMessage(index, ClothChange.class, ClothChange::encode, ClothChange::decode, ClothChange::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+
+        index++;
+        NETWORK.registerMessage(index, OpenCharacterCreatorPacket.class, OpenCharacterCreatorPacket::encode, OpenCharacterCreatorPacket::decode, OpenCharacterCreatorPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
