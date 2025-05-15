@@ -46,8 +46,8 @@ public class CustomInventoryEvents {
                 hasInventoryOpened = true;
 
                 // Play open sounds
-                player.playSound(ModSoundEvents.OPEN_BAG.get(), 1, 1);
-                player.playSound(ModSoundEvents.OPEN_BASS.get(), 0.5F, 1);
+                player.playSound(ModSoundEvents.OPEN_BAG.get(), 0.3F, 1);
+                player.playSound(ModSoundEvents.OPEN_BASS.get(), 0.3F, 1);
             }
         }
     }
@@ -61,7 +61,7 @@ public class CustomInventoryEvents {
             assert player != null;
 
             // Play close sound (open sound with lower pitch)
-            player.playSound(ModSoundEvents.OPEN_BAG.get(), 1F, 0.8F);
+            player.playSound(ModSoundEvents.OPEN_BAG.get(), 0.3F, 0.8F);
         }
     }
 
