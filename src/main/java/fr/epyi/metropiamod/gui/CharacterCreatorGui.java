@@ -107,7 +107,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedBodyType = i;
             }
@@ -143,7 +143,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedBodyColor = i;
             }
@@ -179,7 +179,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedHairType = i;
             }
@@ -215,7 +215,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedBeardType = i;
             }
@@ -248,7 +248,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedHairColor = i;
             }
@@ -284,7 +284,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedEyeType = i;
             }
@@ -317,7 +317,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedEyeColor = i;
             }
@@ -353,7 +353,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedMouthType = i;
             }
@@ -389,7 +389,7 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                clicked = false;
+                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedNoseType = i;
             }
@@ -411,5 +411,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    }
+
+    private void onSelectItem(double mouseX, double mouseY) {
+        clicked = false;
     }
 }

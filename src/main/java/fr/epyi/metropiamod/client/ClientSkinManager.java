@@ -66,7 +66,7 @@ public class ClientSkinManager {
         } else {
             // Loop skins and download if not cached
             for (String url : urls) {
-                if(!cachedUrls.containsKey(url)) {
+                if(url.startsWith("http") && !cachedUrls.containsKey(url)) {
                     texturesToLoad.add(new SkinLoadJob(uuid, url, bodyType, isTransparent));
                 }
             }
@@ -88,17 +88,19 @@ public class ClientSkinManager {
                     ArrayList<BufferedImage> textures = new ArrayList<>();
 
                     for (String url : urls) {
-                        ResourceLocation cachedResource = cachedUrls.get(url);
-                        // Get the image at the texture location
-                        DynamicTexture dynamicTexture = (DynamicTexture) textureManager.getTexture(cachedResource);
-                        BufferedImage bufferedImage = new BufferedImage(dynamicTexture.getTextureData().getWidth(), dynamicTexture.getTextureData().getHeight(), BufferedImage.TYPE_INT_ARGB);
-                        for (int y = 0; y < dynamicTexture.getTextureData().getHeight(); y++) {
-                            for (int x = 0; x < dynamicTexture.getTextureData().getWidth(); x++) {
-                                int rgb = dynamicTexture.getTextureData().getPixelRGBA(x, y);
-                                bufferedImage.setRGB(x, y, rgb);
+                        if (url.startsWith("http")) {
+                            ResourceLocation cachedResource = cachedUrls.get(url);
+                            // Get the image at the texture location
+                            DynamicTexture dynamicTexture = (DynamicTexture) textureManager.getTexture(cachedResource);
+                            BufferedImage bufferedImage = new BufferedImage(dynamicTexture.getTextureData().getWidth(), dynamicTexture.getTextureData().getHeight(), BufferedImage.TYPE_INT_ARGB);
+                            for (int y = 0; y < dynamicTexture.getTextureData().getHeight(); y++) {
+                                for (int x = 0; x < dynamicTexture.getTextureData().getWidth(); x++) {
+                                    int rgb = dynamicTexture.getTextureData().getPixelRGBA(x, y);
+                                    bufferedImage.setRGB(x, y, rgb);
+                                }
                             }
+                            textures.add(bufferedImage);
                         }
-                        textures.add(bufferedImage);
                     }
 
                     int size = 128;

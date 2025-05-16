@@ -94,6 +94,9 @@ public class MetropiaMod
 
         index++;
         NETWORK.registerMessage(index, OpenCharacterCreatorPacket.class, OpenCharacterCreatorPacket::encode, OpenCharacterCreatorPacket::decode, OpenCharacterCreatorPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+
+        index++;
+        NETWORK.registerMessage(index, ApplyAppearancePacket.class, ApplyAppearancePacket::encode, ApplyAppearancePacket::decode, ApplyAppearancePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

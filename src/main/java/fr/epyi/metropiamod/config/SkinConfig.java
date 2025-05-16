@@ -69,12 +69,17 @@ public class SkinConfig {
 
 
         SKIN_VOID_SKIN_URL = SERVER_BUILDER.comment("A direct url pointing to a full transparent image")
-                .define("voidSkinUrl", "https://i.imgur.com/6BBXz5m.png");
+                .define("voidSkinUrl", "https://metropia.lets-pop.fr/metropiamod/default/void.png");
 
         //SERVER_BUILDER.pop();
 
         CREATOR_BODY_TYPES = SERVER_BUILDER.comment("Body types for the character creator")
-                .defineList("creatorBodyTypes", Collections.singletonList("body1.png"), (value) -> false);
+                .defineList("creatorBodyTypes", Collections.unmodifiableList(Arrays.asList(
+                        "https://metropia.lets-pop.fr/metropiamod/default/void.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/bodyType_1.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/bodyType_2.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/bodyType_3.png"
+                )), (value) -> false);
 
         CREATOR_BODY_COLORS = SERVER_BUILDER.comment("Body colors for the character creator")
                 .defineList("creatorBodyColors", Collections.unmodifiableList(Arrays.asList(
@@ -90,10 +95,30 @@ public class SkinConfig {
                 )), (value) -> false);
 
         CREATOR_HAIR_TYPES = SERVER_BUILDER.comment("Hair types for the character creator")
-                .defineList("creatorHairTypes", Collections.singletonList("hair1.png"), (value) -> false);
+                .defineList("creatorHairTypes", Collections.unmodifiableList(Arrays.asList(
+                        "https://metropia.lets-pop.fr/metropiamod/default/void.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/hairType_1.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/hairType_2.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/hairType_3.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/hairType_4.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/hairType_5.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/hairType_6.png"
+                )), (value) -> false);
 
         CREATOR_BEARD_TYPES = SERVER_BUILDER.comment("Beard types for the character creator")
-                .defineList("creatorBeardTypes", Collections.singletonList("beard1.png"), (value) -> false);
+                .defineList("creatorBeardTypes", Collections.unmodifiableList(Arrays.asList(
+                        "https://metropia.lets-pop.fr/metropiamod/default/void.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_1.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_2.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_3.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_4.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_5.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_6.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_7.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_8.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_9.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/beardType_10.png"
+                )), (value) -> false);
 
         CREATOR_HAIR_COLORS = SERVER_BUILDER.comment("Hair colors for the character creator")
                 .defineList("creatorHairColors", Collections.unmodifiableList(Arrays.asList(
@@ -124,7 +149,11 @@ public class SkinConfig {
                 )), (value) -> false);
 
         CREATOR_EYE_TYPES = SERVER_BUILDER.comment("Eye types for the character creator")
-                .defineList("creatorEyeTypes", Collections.singletonList("eye1.png"), (value) -> false);
+                .defineList("creatorEyeTypes", Collections.unmodifiableList(Arrays.asList(
+                        "https://metropia.lets-pop.fr/metropiamod/default/void.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/eyeType_1.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/eyeType_2.png"
+                )), (value) -> false);
 
         CREATOR_EYE_COLORS = SERVER_BUILDER.comment("Eye colors for the character creator")
                 .defineList("creatorEyeColors", Collections.unmodifiableList(Arrays.asList(
@@ -161,10 +190,15 @@ public class SkinConfig {
                 )), (value) -> false);
 
         CREATOR_MOUTH_TYPES = SERVER_BUILDER.comment("Mouth types for the character creator")
-                .defineList("creatorMouthTypes", Collections.singletonList("mouth1.png"), (value) -> false);
+                .defineList("creatorMouthTypes", Collections.unmodifiableList(Arrays.asList(
+                        "https://metropia.lets-pop.fr/metropiamod/default/void.png"
+                )), (value) -> false);
 
         CREATOR_NOSE_TYPES = SERVER_BUILDER.comment("Nose types for the character creator")
-                .defineList("creatorNoseTypes", Collections.singletonList("nose1.png"), (value) -> false);
+                .defineList("creatorNoseTypes", Collections.unmodifiableList(Arrays.asList(
+                        "https://metropia.lets-pop.fr/metropiamod/default/void.png",
+                        "https://metropia.lets-pop.fr/metropiamod/default/noseType_1.png"
+                )), (value) -> false);
 
         SERVER_CONFIG = SERVER_BUILDER.build();
     }
