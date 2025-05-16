@@ -1,6 +1,5 @@
 package fr.epyi.metropiamod.network;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import fr.epyi.metropiamod.CustomSkinManager;
 import fr.epyi.metropiamod.config.SkinConfig;
 import fr.epyi.metropiamod.item.ClothItem;

@@ -61,109 +61,144 @@ public class ClientSkinManager {
      * @param isTransparent if the texture has transparency
      */
     public static void setSkin(UUID uuid, ArrayList<String> urls, String bodyType, boolean isTransparent) {
-        if("reset".equals(urls.get(0))) {
+        if ("reset".equals(urls.get(0))) {
             resetSkin(uuid);
         } else {
-            // Loop skins and download if not cached
             for (String url : urls) {
-                if(url.startsWith("http") && !cachedUrls.containsKey(url)) {
+                if (url.startsWith("http") && !cachedUrls.containsKey(url)) {
                     texturesToLoad.add(new SkinLoadJob(uuid, url, bodyType, isTransparent));
                 }
             }
 
-            // Load textures
             try {
-                try {
-                    ClientSkinManager.loadQueuedSkins();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            } finally {
-                Thread thread = new Thread(() -> {
-                    // We just have downloaded all skins, we now have to merge them into one texture
-                    String path = "skins/merge_" + urls.hashCode();
-                    ResourceLocation resourceLocation = new ResourceLocation(MetropiaMod.MOD_ID, path);
-
-                    // Create a new texture
-                    ArrayList<BufferedImage> textures = new ArrayList<>();
-
-                    for (String url : urls) {
-                        if (url.startsWith("http")) {
-                            ResourceLocation cachedResource = cachedUrls.get(url);
-                            // Get the image at the texture location
-                            DynamicTexture dynamicTexture = (DynamicTexture) textureManager.getTexture(cachedResource);
-                            BufferedImage bufferedImage = new BufferedImage(dynamicTexture.getTextureData().getWidth(), dynamicTexture.getTextureData().getHeight(), BufferedImage.TYPE_INT_ARGB);
-                            for (int y = 0; y < dynamicTexture.getTextureData().getHeight(); y++) {
-                                for (int x = 0; x < dynamicTexture.getTextureData().getWidth(); x++) {
-                                    int rgb = dynamicTexture.getTextureData().getPixelRGBA(x, y);
-                                    bufferedImage.setRGB(x, y, rgb);
-                                }
-                            }
-                            textures.add(bufferedImage);
-                        }
-                    }
-
-                    int size = 128;
-
-                    // Find the biggest texture
-                    for (BufferedImage texture : textures) {
-                        if(texture.getWidth() > size || texture.getHeight() > size) {
-                            size = texture.getWidth();
-                        }
-                    }
-
-                    BufferedImage merged = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-                    // Merge the textures like a layer system
-                    for (BufferedImage texture : textures) {
-                        // Scale image to the largest size
-                        BufferedImage scaled = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-                        scaled.getGraphics().drawImage(texture, 0, 0, size, size, null);
-                        for (int y = 0; y < scaled.getHeight(); y++) {
-                            for (int x = 0; x < scaled.getWidth(); x++) {
-                                int rgb = scaled.getRGB(x, y);
-                                int alpha = (rgb >> 24) & 0xFF;
-                                int red = (rgb >> 16) & 0xFF;
-                                int green = (rgb >> 8) & 0xFF;
-                                int blue = rgb & 0xFF;
-
-                                int abgrColor = (alpha << 24) | (blue << 16) | (green << 8) | red;
-
-                                if((abgrColor & 0xFF000000) != 0) {
-                                    merged.setRGB(x, y, abgrColor);
-                                }
-                            }
-                        }
-                    }
-
-                    NativeImage nativeImage = new NativeImage(merged.getWidth(), merged.getHeight(), true);
-
-                    for (int y = 0; y < merged.getHeight(); y++) {
-                        for (int x = 0; x < merged.getWidth(); x++) {
-                            int rgb = merged.getRGB(x, y);
-                            int alpha = (rgb >> 24) & 0xFF;
-                            int red = (rgb >> 16) & 0xFF;
-                            int green = (rgb >> 8) & 0xFF;
-                            int blue = (rgb) & 0xFF;
-
-                            int abgrColor = (alpha << 24) | (blue << 16) | (green << 8) | red;
-
-                            nativeImage.setPixelRGBA(x, y, abgrColor);
-                        }
-                    }
-
-                    DynamicTexture dynamicTexture = new DynamicTexture(nativeImage);
-                    Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation, dynamicTexture);
-
-
-                    // Put the new skin in the playerSkinMap
-                    playerSkinMap.put(uuid, new ClientSkinData(resourceLocation, bodyType));
-                });
-                thread.start();
+                ClientSkinManager.loadQueuedSkins();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+
+            Thread thread = new Thread(() -> {
+                String path = "skins/merge_" + urls.hashCode();
+                ResourceLocation resourceLocation = new ResourceLocation(MetropiaMod.MOD_ID, path);
+
+                ArrayList<BufferedImage> textures = new ArrayList<>();
+
+                for (int i = 0; i < urls.size(); i++) {
+                    String current = urls.get(i);
+
+                    if (current.startsWith("http")) {
+                        ResourceLocation cachedResource = cachedUrls.get(current);
+                        DynamicTexture dynamicTexture = (DynamicTexture) textureManager.getTexture(cachedResource);
+                        BufferedImage bufferedImage = new BufferedImage(dynamicTexture.getTextureData().getWidth(), dynamicTexture.getTextureData().getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+                        // Copie les données de texture
+                        for (int y = 0; y < dynamicTexture.getTextureData().getHeight(); y++) {
+                            for (int x = 0; x < dynamicTexture.getTextureData().getWidth(); x++) {
+                                int rgb = dynamicTexture.getTextureData().getPixelRGBA(x, y);
+                                bufferedImage.setRGB(x, y, rgb);
+                            }
+                        }
+
+                        // Vérifie si le prochain élément est une couleur
+                        if (i + 1 < urls.size() && urls.get(i + 1).matches("^[0-9A-Fa-f]{6}$")) {
+                            String hexColor = urls.get(i + 1);
+                            int color = Integer.parseInt(hexColor, 16);
+                            int red = (color >> 16) & 0xFF;
+                            int green = (color >> 8) & 0xFF;
+                            int blue = color & 0xFF;
+
+                            // Applique l'effet de multiply blending
+                            for (int y = 0; y < bufferedImage.getHeight(); y++) {
+                                for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                                    int argb = bufferedImage.getRGB(x, y);
+
+                                    int alpha = (argb >> 24) & 0xFF;
+                                    int originalRed = (argb >> 16) & 0xFF;
+                                    int originalGreen = (argb >> 8) & 0xFF;
+                                    int originalBlue = argb & 0xFF;
+
+                                    // Multiply blending
+                                    int blendedRed = (originalRed * red) / 255;
+                                    int blendedGreen = (originalGreen * green) / 255;
+                                    int blendedBlue = (originalBlue * blue) / 255;
+
+                                    // Préserve l'alpha
+                                    int blendedColor = (alpha << 24) | (blendedRed << 16) | (blendedGreen << 8) | blendedBlue;
+                                    bufferedImage.setRGB(x, y, blendedColor);
+                                }
+                            }
+
+                            // Ignore la couleur pour la prochaine itération
+                            i++;
+                        }
+
+                        textures.add(bufferedImage);
+                    }
+                }
+
+                // Merge des textures avec transparence
+                int size = 128;
+                for (BufferedImage texture : textures) {
+                    size = Math.max(size, Math.max(texture.getWidth(), texture.getHeight()));
+                }
+
+                BufferedImage merged = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+                for (BufferedImage texture : textures) {
+                    for (int y = 0; y < texture.getHeight(); y++) {
+                        for (int x = 0; x < texture.getWidth(); x++) {
+                            int topRgb = texture.getRGB(x, y);
+                            int bottomRgb = merged.getRGB(x, y);
+
+                            int topAlpha = (topRgb >> 24) & 0xFF;
+                            int topRed = (topRgb >> 16) & 0xFF;
+                            int topGreen = (topRgb >> 8) & 0xFF;
+                            int topBlue = topRgb & 0xFF;
+
+                            int bottomAlpha = (bottomRgb >> 24) & 0xFF;
+                            int bottomRed = (bottomRgb >> 16) & 0xFF;
+                            int bottomGreen = (bottomRgb >> 8) & 0xFF;
+                            int bottomBlue = bottomRgb & 0xFF;
+
+                            // Gestion de la transparence
+                            float alphaTop = topAlpha / 255.0f;
+                            float alphaBottom = bottomAlpha / 255.0f;
+                            float finalAlpha = alphaTop + alphaBottom * (1 - alphaTop);
+
+                            int finalRed = (int) ((topRed * alphaTop + bottomRed * alphaBottom * (1 - alphaTop)) / finalAlpha);
+                            int finalGreen = (int) ((topGreen * alphaTop + bottomGreen * alphaBottom * (1 - alphaTop)) / finalAlpha);
+                            int finalBlue = (int) ((topBlue * alphaTop + bottomBlue * alphaBottom * (1 - alphaTop)) / finalAlpha);
+                            int finalAlphaInt = (int) (finalAlpha * 255);
+
+                            int finalColor = (finalAlphaInt << 24) | (finalRed << 16) | (finalGreen << 8) | finalBlue;
+                            merged.setRGB(x, y, finalColor);
+                        }
+                    }
+                }
+
+                // Conversion en NativeImage
+                NativeImage nativeImage = new NativeImage(merged.getWidth(), merged.getHeight(), true);
+                for (int y = 0; y < merged.getHeight(); y++) {
+                    for (int x = 0; x < merged.getWidth(); x++) {
+                        int rgb = merged.getRGB(x, y);
+                        int alpha = (rgb >> 24) & 0xFF;
+                        int red = (rgb >> 16) & 0xFF;
+                        int green = (rgb >> 8) & 0xFF;
+                        int blue = rgb & 0xFF;
+                        int abgrColor = (alpha << 24) | (blue << 16) | (green << 8) | red;
+                        nativeImage.setPixelRGBA(x, y, abgrColor);
+                    }
+                }
+
+                // Enregistrement de la texture
+                DynamicTexture dynamicTexture = new DynamicTexture(nativeImage);
+                Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation, dynamicTexture);
+                playerSkinMap.put(uuid, new ClientSkinData(resourceLocation, bodyType));
+            });
+            thread.start();
         }
     }
 
-//    /**
+
+    //    /**
 //     * Reset the skin of the target player.
 //     *
 //     * If the player was not found no action will be performed.

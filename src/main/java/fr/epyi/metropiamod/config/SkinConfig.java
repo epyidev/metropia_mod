@@ -75,7 +75,6 @@ public class SkinConfig {
 
         CREATOR_BODY_TYPES = SERVER_BUILDER.comment("Body types for the character creator")
                 .defineList("creatorBodyTypes", Collections.unmodifiableList(Arrays.asList(
-                        "https://metropia.lets-pop.fr/metropiamod/default/void.png",
                         "https://metropia.lets-pop.fr/metropiamod/default/bodyType_1.png",
                         "https://metropia.lets-pop.fr/metropiamod/default/bodyType_2.png",
                         "https://metropia.lets-pop.fr/metropiamod/default/bodyType_3.png"
@@ -150,7 +149,6 @@ public class SkinConfig {
 
         CREATOR_EYE_TYPES = SERVER_BUILDER.comment("Eye types for the character creator")
                 .defineList("creatorEyeTypes", Collections.unmodifiableList(Arrays.asList(
-                        "https://metropia.lets-pop.fr/metropiamod/default/void.png",
                         "https://metropia.lets-pop.fr/metropiamod/default/eyeType_1.png",
                         "https://metropia.lets-pop.fr/metropiamod/default/eyeType_2.png"
                 )), (value) -> false);

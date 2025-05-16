@@ -1,11 +1,16 @@
 package fr.epyi.metropiamod.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import fr.epyi.metropiamod.MetropiaMod;
 import fr.epyi.metropiamod.config.SkinConfig;
 import fr.epyi.metropiamod.events.ModSoundEvents;
+import fr.epyi.metropiamod.network.ApplyAppearancePacket;
+import fr.epyi.metropiamod.network.InventorySlotChangePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
@@ -107,9 +112,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedBodyType = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -143,9 +148,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedBodyColor = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -179,9 +184,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedHairType = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -215,9 +220,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedBeardType = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -248,9 +253,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedHairColor = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -284,9 +289,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedEyeType = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -317,9 +322,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedEyeColor = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -353,9 +358,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedMouthType = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -389,9 +394,9 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
             // Selectionner la case
             if (isHovering && clicked) {
-                onSelectItem(mouseX, mouseY);
                 getInstance().player.playSound(ModSoundEvents.TICK.get(), 0.7F, 1F);
                 selectedNoseType = i;
+                onSelectItem(mouseX, mouseY);
             }
 
             // Jouer son quand hover
@@ -415,5 +420,16 @@ public class CharacterCreatorGui extends ContainerScreen<CharacterCreatorContain
 
     private void onSelectItem(double mouseX, double mouseY) {
         clicked = false;
+
+        MetropiaMod.NETWORK.sendToServer(new ApplyAppearancePacket(false,
+                bodyTypes.get(selectedBodyType),
+                bodyColors.get(selectedBodyColor),
+                hairTypes.get(selectedHairType),
+                beardTypes.get(selectedBeardType),
+                hairColors.get(selectedHairColor),
+                eyeTypes.get(selectedEyeType),
+                eyeColors.get(selectedEyeColor),
+                mouthTypes.get(selectedMouthType),
+                noseTypes.get(selectedNoseType)));
     }
 }
